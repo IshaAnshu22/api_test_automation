@@ -1,0 +1,6 @@
+{
+  "error": "Not Found",
+  "message": "Product with id 999 not found",
+  "status": 404,
+  "timestamp": "2025-01-01T12:05:33Z"
+}

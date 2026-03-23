@@ -1,0 +1,12 @@
+[
+  {
+    "test_name" : "test_get_products",
+    "limit": 5,
+    "category": "men's clothing",
+    "json_schema" : "get_products_schema.json",
+    "min_records" : 1,
+    "expected_status_code" : 200,
+    "max_elapsed_time_in_ms" : 1000,
+    "content_type_header": "application/json"
+  }
+]

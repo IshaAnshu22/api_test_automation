@@ -1,0 +1,23 @@
+{
+  "dev":{
+    "base_url" : "https://fakestoreapi.com",
+    "user_name": "<user_name>",
+    "password": "<password>",
+    "bearer_token":"***REMOVED***"
+  },
+  "qa":{
+    "base_url" : "https://fakestoreapiqa.com",
+    "user_name": "<user_name>",
+    "password": "<password>",
+    "bearer_token":"***REMOVED***"
+  },
+  "staging":{
+    "base_url" : "https://fakestoreapistaging.com",
+    "user_name": "<user_name>",
+    "password": "<password>",
+    "bearer_token":"***REMOVED***"
+  },
+  "test_data_folder_path" : "data\\test_data",
+  "json_schema_folder_path" : "data\\json_schema\\",
+  "logger_name": "session"
+}

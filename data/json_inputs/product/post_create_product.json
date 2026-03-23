@@ -1,0 +1,7 @@
+{
+  "title": "New Product",
+  "price": 99.99,
+  "description": "Some description",
+  "image": "https://example.com/x.png",
+  "category": "electronics"
+}

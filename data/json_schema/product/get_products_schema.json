@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "title": {
+        "type": "string"
+      },
+      "price": {
+        "type": "number"
+      },
+      "description": {
+        "type": "string"
+      },
+      "category": {
+        "type": "string"
+      },
+      "image": {
+        "type": "string"
+      },
+      "rating": {
+        "type": "object",
+        "properties": {
+          "rate": {
+            "type": "number"
+          },
+          "count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "count",
+          "rate"
+        ]
+      }
+    },
+    "required": [
+      "category",
+      "description",
+      "id",
+      "image",
+      "price",
+      "rating",
+      "title"
+    ]
+  }
+}
