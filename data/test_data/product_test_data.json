@@ -1,12 +1,25 @@
 [
   {
-    "test_name" : "test_get_products",
-    "limit": 5,
-    "category": "men's clothing",
-    "json_schema" : "get_products_schema.json",
-    "min_records" : 1,
-    "expected_status_code" : 200,
-    "max_elapsed_time_in_ms" : 1000,
-    "content_type_header": "application/json"
+    "test_name": "get_products",
+    "description": "Fetch all products without limit",
+    "params": {},
+    "json_schema": "get_products_schema.json",
+    "status_code": 200,
+    "content_type": "application/json",
+    "min_records": 1,
+    "max_response_time_ms": 1000
+  },
+  {
+    "test_name": "get_products_limit",
+    "description": "Fetch products with limit",
+    "params": {
+      "limit": 5
+    },
+    "json_schema": "get_products_schema.json",
+    "status_code": 200,
+    "content_type": "application/json",
+    "exact_records": 5,
+    "max_response_time_ms": 1000
   }
+
 ]

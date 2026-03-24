@@ -25,26 +25,31 @@ class ApiClient:
         self.password = password
 
     def set_headers(self, headers=None):
+        final_headers = self.headers.copy()
+
         if headers:
-            self.headers.update(headers)
-        if self.auth_type == AuthTypeEnum.BEARER and self.token is not None:
-            self.headers["Authorization"] = f"Bearer {self.token}"
-        elif self.auth_type == AuthTypeEnum.API_TOKEN and self.token is not None:
-            self.headers["x-api-key"] = self.token
+            final_headers.update(headers)
+
+        if self.auth_type == AuthTypeEnum.BEARER and self.token:
+            final_headers["Authorization"] = f"Bearer {self.token}"
+        elif self.auth_type == AuthTypeEnum.API_TOKEN and self.token:
+            final_headers["x-api-key"] = self.token
+
+        return final_headers
 
     def _auth(self):
         if self.auth_type == AuthTypeEnum.BASIC and self.username and self.password:
             return HTTPBasicAuth(self.username, self.password)
         return None
 
-    def get(self, endpoint, headers, **kwargs):
+    def get(self, endpoint, headers=None, **kwargs):
         return requests.get(f'{self.url}{endpoint}', headers=self.set_headers(headers), auth=self._auth(), **kwargs)
 
-    def post(self, endpoint, headers, body, **kwargs):
+    def post(self, endpoint, headers=None, body=None, **kwargs):
         return requests.post(f'{self.url}{endpoint}', headers=self.set_headers(headers), auth=self._auth(), json=body, **kwargs)
 
-    def put(self, endpoint, headers, body, **kwargs):
+    def put(self, endpoint, headers=None, body=None, **kwargs):
         return requests.put(f'{self.url}{endpoint}', headers=self.set_headers(headers), auth=self._auth(), json=body, **kwargs)
 
-    def delete(self, endpoint, headers, **kwargs):
+    def delete(self, endpoint, headers=None, **kwargs):
         return requests.delete(f'{self.url}{endpoint}', headers=self.set_headers(headers), auth=self._auth(), **kwargs)

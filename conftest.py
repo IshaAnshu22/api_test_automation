@@ -81,18 +81,23 @@ def test_data(request, config):
     file_name = request.fspath.basename
     feature_name = file_name.split("_")[0]
 
-    test_name = request.function.__name__
+    # 👇 important change
+    test_name = request.param if hasattr(request, "param") else request.function.__name__
 
-    test_data_file_name = feature_name + "_test_data.json"
-    test_folder_path = os.path.join(os.path.dirname(__file__), config["test_data_folder_path"])
-    test_file_path = os.path.join(test_folder_path, test_data_file_name)
-    with open(test_file_path, "r") as f:
+    file_path = os.path.join(
+        os.path.dirname(__file__),
+        config["test_data_folder_path"],
+        f"{feature_name}_test_data.json"
+    )
+
+    with open(file_path) as f:
         testcases = json.load(f)
-    for testcase in testcases:
-        if testcase["test_name"] == test_name:
-            return testcase
-    raise Exception(f"Test case {test_name} not found in the test data file {test_data_file_name}")
 
+    for tc in testcases:
+        if tc["test_name"] == test_name:
+            return tc
+
+    raise Exception(f"{test_name} not found")
 
 @pytest.fixture
 def test_context(setup, test_data, config):
@@ -104,7 +109,7 @@ def test_context(setup, test_data, config):
 
 
 @pytest.fixture
-def get_schema_folder_path(request, test_context):
+def get_schema_file_path(request, test_context):
 
     return os.path.join(
         os.path.dirname(os.path.abspath(__file__)),
