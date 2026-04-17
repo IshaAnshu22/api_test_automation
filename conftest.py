@@ -67,13 +67,21 @@ def logger(config):
     logger.info("Pytest Session Finished")
     logger.info("=" * 80)
 
-@pytest.fixture
-def setup(config, request):
-    env = request.config.getoption("--env")
+
+@pytest.fixture(scope="session")
+def setup(config, pytestconfig):
+    env = pytestconfig.getoption("--env")
     env_config = config.get(env, config["dev"])
     url = env_config["base_url"]
-    api_client = ApiClient(url)
-    return api_client
+    api_client = ApiClient(
+        url=url,
+        timeout=config.get("request_timeout_seconds", 10),
+        max_retries=config.get("max_retries", 3),
+        retry_backoff=config.get("retry_backoff_seconds", 0.5),
+        retry_statuses=config.get("retry_statuses"),
+    )
+    yield api_client
+    api_client.close()
 
 
 @pytest.fixture
@@ -82,12 +90,14 @@ def test_data(request, config):
     feature_name = file_name.split("_")[0]
 
     # 👇 important change
-    test_name = request.param if hasattr(request, "param") else request.function.__name__
+    test_name = (
+        request.param if hasattr(request, "param") else request.function.__name__
+    )
 
     file_path = os.path.join(
         os.path.dirname(__file__),
         config["test_data_folder_path"],
-        f"{feature_name}_test_data.json"
+        f"{feature_name}_test_data.json",
     )
 
     with open(file_path) as f:
@@ -99,13 +109,10 @@ def test_data(request, config):
 
     raise Exception(f"{test_name} not found")
 
+
 @pytest.fixture
 def test_context(setup, test_data, config):
-    return {
-        "setup": setup,
-        "test_data": test_data,
-        "config": config
-    }
+    return {"setup": setup, "test_data": test_data, "config": config}
 
 
 @pytest.fixture
@@ -113,14 +120,16 @@ def get_schema_file_path(request, test_context):
 
     return os.path.join(
         os.path.dirname(os.path.abspath(__file__)),
-        test_context["config"]["json_schema_folder_path"], request.fspath.basename.split("_")[0],
-        test_context["test_data"]["json_schema"])
+        test_context["config"]["json_schema_folder_path"],
+        request.fspath.basename.split("_")[0],
+        test_context["test_data"]["json_schema"],
+    )
 
 
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_call(item):
 
-    logger = logging.getLogger()
+    logger = get_logger()
     logger.info(f"START: {item.nodeid}")
     yield
     logger.info(f"END: {item.nodeid}")

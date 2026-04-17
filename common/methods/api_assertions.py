@@ -21,27 +21,33 @@ class APIAssertions:
         try:
             assert response.status_code == expected
         except AssertionError:
-            logger.error(
+            message = (
                 f"Status Code Assertion Failed | Expected: {expected}, Got: {response.status_code}"
             )
+            logger.error(message)
+            pytest.fail(message)
 
     def assert_response_time(self, logger, elapsed, max_time):
         buffer = 1.2
         try:
             assert elapsed <= max_time * buffer
         except AssertionError:
-            logger.error(
+            message = (
                 f"Response Time Assertion Failed | Actual: {elapsed:.2f} ms, Allowed: {max_time} ms"
             )
+            logger.error(message)
+            pytest.fail(message)
 
     def assert_headers(self, logger, response, expected_header):
         try:
             content_type = response.headers.get("Content-Type", "")
             assert expected_header in content_type
         except AssertionError:
-            logger.error(
+            message = (
                 f"Header Assertion Failed | Expected: {expected_header}, Got: {content_type}"
             )
+            logger.error(message)
+            pytest.fail(message)
 
     def validate_schema(self, logger, body, schema):
         validator = Draft7Validator(schema)

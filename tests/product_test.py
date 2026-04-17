@@ -16,9 +16,7 @@ class TestProduct:
         api_client = setup
 
         # Build params
-        params = {}
-        if test_data.get("limit"):
-            params["limit"] = test_data["limit"]
+        params = test_data.get("params", {}).copy()
 
         api_assert = APIAssertions()
 
@@ -42,7 +40,7 @@ class TestProduct:
         assert isinstance(body, list), "Expected list of products"
 
         if params.get("limit"):
-            assert len(body) <= int(test_data["limit"])
+            assert len(body) <= int(params["limit"])
 
         for item in body:
             self.validate_product(item)

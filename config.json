@@ -19,5 +19,9 @@
   },
   "test_data_folder_path" : "data\\test_data",
   "json_schema_folder_path" : "data\\json_schema\\",
-  "logger_name": "session"
+  "logger_name": "session",
+  "request_timeout_seconds": 10,
+  "max_retries": 3,
+  "retry_backoff_seconds": 0.5,
+  "retry_statuses": [429, 500, 502, 503, 504]
 }
